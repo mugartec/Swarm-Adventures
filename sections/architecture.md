@@ -31,10 +31,10 @@ And Postgres is just one example. The same happens [with MinIO](https://docs.min
 
 A question that often arises is: why not replicating the service with many containers mounting the same volume at the same time? This is usually a very bad idea. When multiple machines write to the same shared volume, locking problems can quickly lead to data corruption. Not to mention that the application needs to take into account that it is replicated so different replicas do not perform the same task twice.
 
- If only one machine is writing and the rest are only reading (similar to a primary-replica setup for databases) there are cases where shared mounting is be a good idea. [Here](https://www.digitalocean.com/community/tutorials/how-to-share-data-between-docker-containers) you can find more information about this. Oh, and if you are developing an application that will run as a service, please don't rely on the computer's filesystem. Use an object store to you make the application scalable.
+ If only one machine is writing and the rest are only reading (similar to a primary-replica setup for databases) there are cases when shared storage can be a good idea. [Here](https://www.digitalocean.com/community/tutorials/how-to-share-data-between-docker-containers) you can find more information about this. Oh, and if you are developing an application that will run as a service, please don't rely on the computer's filesystem. Use an object store to make the application scalable.
 
 ## Reverse Proxy
-Apart from persistent storage, our applications need to be accessible from the internet. Mostly through a browser using ports 443 and 80 (to redirect to 443). And not only this, we want to have a good URL for that. Let's assume we'll use the service `swarmadventures.com`. When hosting a service such as [Valutwarden](https://github.com/dani-garcia/vaultwarden), it'd be nice to access it via `vaultwarden.swarmadventures.com`, and the same with any service.
+Apart from persistent storage, our applications need to be accessible from the internet. Mostly through a browser using ports 443 and 80 (to redirect to 443). And not only this, we want to have a good URL for that. Let's assume we'll point `swarmadventures.com` to our own IP (this is explained in the [Networking](./sections/networking.md) section). When hosting a service such as [Valutwarden](https://github.com/dani-garcia/vaultwarden), it'd be nice to access it via `vaultwarden.swarmadventures.com`, and the same with any service.
 
 To achieve this we'll need quite a smart reverse proxy. In particular, if a request arrives at `service.swarmadventures.com` it will need to first map the request to the corresponding service, and then redirect it to a machine running the service (and to the port in which it is running). Moreover, we expect the load of the machines to be balanced, so the reverse proxy also has to act as a load balancer. And if that was not enough, we'll ask the reverse proxy to go get some awesome certificates from [Let's Encrypt](https://letsencrypt.org/) so that users connect securely via HTTPS.
 
@@ -49,13 +49,13 @@ Overlay networks allow containers running in different nodes to connect. For exa
 
 The strategy will be to create one overlay network for each centralized service (database, object store, memory store and reverse proxy).
 
-As an example, let us assume we have one container for each of Postgres, MinIO and a reverse proxy. Then we'll have three overlay networks called `database`, `object-store` and `reverse-proxy`, respectively. Now we want to mount service composed by:
+As an example, let us assume we have one container for each of Postgres, MinIO and a reverse proxy. Then we'll have three overlay networks called `database`, `object-store` and `reverse-proxy`, respectively. Now suume we want to mount a service composed of:
 
- - A backend that needs connetion to a database and an object store.
- - A frontend that needs to connect to the backend and the reverse proxy.
+ - A backend that uses a database and an object store, and is exposed via `service.swarmadventures.com/api`.
+ - A frontend bundle that is served via the reverse proxy.
 
 Then, the conceptual map would look as follows:
 
 ![Overlay Networks](../images/overlay-networks.png)
 
-One thing to take into account here is that all applications using the database will form part of the same network. Real paranoids would further isolate different services, but I don't want to create too many networks in my cluster.
+One thing to take into account here is that all applications using one service will form part of the same network. For example the frontend and backend really don't need to communicate, but they could via the `reverse-proxy` network. Moreover, the backends of two unrelated applications could be connected via the `database` network. Real paranoids would further isolate different services, but I don't want to create too many networks in my cluster.
