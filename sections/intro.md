@@ -15,7 +15,7 @@ Container orchestrators automate many of the usual DevOps tasks by presenting yo
 ## Why Swarm?
 I'll be honest: this is not a completely informed decision. I only have two arguments.
 1. In the past I've deployed applications with Kubernetes, the most popular container orchestrator. It is a powerfull and extensible tool that allows for customizable deploys, but at the expense of a steep learning curve with Kubernetes-only concepts and ad-hoc file formats.
-2. To deploy services in Docker Swarm you use [compose files](https://docs.docker.com/compose/compose-file/compose-file-v3/), the configuration language used by [Docker Compose](https://docs.docker.com/compose/). I use Docker Compose everyday to develop and find incredibly useful and simple.
+2. To deploy services in Docker Swarm you use [compose files](https://docs.docker.com/compose/compose-file/compose-file-v3/), the configuration language used by [Docker Compose](https://docs.docker.com/compose/). I use Docker Compose everyday to develop and find it incredibly useful and simple.
 
 I have not used other orchestration tools, but after reading many blogs and comparisons I went on with Swarm. At least I can compare it against Kubernetes. And trust me, I do not regret my decision. I hope you see the beauty of Docker Swarm too after reading through this repo.
 

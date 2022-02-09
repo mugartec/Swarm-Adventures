@@ -12,13 +12,13 @@ English is not my main language, sorry in advance for any typos or grammar error
 
 ## Table of Contents
  - [Introduction](./sections/intro.md)
-   - [Why Swarm?](./sections/intro.md#why-swarm?)
+   - [Why Swarm?](./sections/intro.md#why-swarm)
    - [Infrastructure](./sections/intro.md#cluster-infrastructure)
- - [Application architecture](./sections/architecture.md) TBW
-   - [Common services](./sections/architecture.md#common-services) TBW
-   - [Persistent data](./sections/architecture.md#persistent-data) TBW
-   - [Reverse proxy](./sections/architecture.md#reverse-proxy) TBW
-   - [Overlay networks](./sections/architecture.md#centralservices) TBW
+ - [Application architecture](./sections/architecture.md)
+   - [Common services](./sections/architecture.md#common-services)
+   - [Persistent data](./sections/architecture.md#persistent-data)
+   - [Reverse proxy](./sections/architecture.md#reverse-proxy)
+   - [Overlay networks](./sections/architecture.md#centralservices)
  - [Setup](./sections/setup.md) TBW
    - [OS and software](./sections/setup.md#install) TBW
    - [Testing the setup](./sections/setup.md#testing) TBW
