@@ -18,19 +18,16 @@ English is not my main language, sorry in advance for any typos or grammar error
    - [Common services](./sections/architecture.md#common-services)
    - [Persistent data](./sections/architecture.md#persistent-data)
    - [Reverse proxy](./sections/architecture.md#reverse-proxy)
-   - [Overlay networks](./sections/architecture.md#centralservices)
+   - [Overlay networks](./sections/architecture.md#overlay-networks)
  - [Setup](./sections/setup.md) TBW
-   - [OS and software](./sections/setup.md#install) TBW
-   - [Testing the setup](./sections/setup.md#testing) TBW
-   - [NFS for persistent storage](./sections/setup.md#NFS) TBW
+   - [OS and software](./sections/setup.md#os-and-software) TBW
+   - [Testing the setup](./sections/setup.md#testing-the-setup) TBW
+   - [Cluster management as a service](./sections/setup.md#cluster-management-as-a-service) TBW
+   - [Access from the internet](./sections/networking.md#access-from-the-internet) TBW
  - [Central services](./sections/services.md) TBW
-   - [Databases](./sections/services.md#postgres) TBW
-   - [Object Store](./sections/services.md#minio) TBW
-   - [Reverse Proxy](./sections/setup.md#traefik) TBW
- - [Networking](./sections/networking.md) TBW
-   - [Access from the internet](./sections/networking.md#internet) TBW
-   - [Testing central services](./sections/networking.md#testing) TBW
- - [Self-hosting Services](./sections/deploy.md) TBW
-   - [Installing Portainer](./sections/deploy.md#portainer) TBW
+   - [Databases](./sections/services.md#databases) TBW
+   - [Object Store](./sections/services.md#object-store) TBW
+   - [Reverse Proxy](./sections/setup.md#reverse-proxy) TBW
+ - [Self-hosting paradise](./sections/deploy.md) TBW
    - [Prerequisites](./sections/deploy.md#prerequisites) TBW
    - [An example application](./sections/deploy.md#example) TBW

@@ -54,8 +54,10 @@ As an example, let us assume we have one container for each of Postgres, MinIO a
  - A backend that uses a database and an object store, and is exposed via `service.swarmadventures.com/api`.
  - A frontend bundle that is served via the reverse proxy.
 
-Then, the conceptual map would look as follows:
+The conceptual map would look as follows:
 
 ![Overlay Networks](../images/overlay-networks.png)
+
+Here each ellipsis represents a network and each box represents a container. We are considering, of course, that containers could be in different machines. 
 
 One thing to take into account here is that all applications using one service will form part of the same network. For example the frontend and backend really don't need to communicate, but they could via the `reverse-proxy` network. Moreover, the backends of two unrelated applications could be connected via the `database` network. Real paranoids would further isolate different services, but I don't want to create too many networks in my cluster.
