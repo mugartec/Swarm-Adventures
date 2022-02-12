@@ -19,11 +19,10 @@ English is not my main language, sorry in advance for any typos or grammar error
    - [Persistent data](./sections/architecture.md#persistent-data)
    - [Reverse proxy](./sections/architecture.md#reverse-proxy)
    - [Overlay networks](./sections/architecture.md#overlay-networks)
- - [Setup](./sections/setup.md) TBW
-   - [OS and software](./sections/setup.md#os-and-software) TBW
-   - [Testing the setup](./sections/setup.md#testing-the-setup) TBW
-   - [Cluster management as a service](./sections/setup.md#cluster-management-as-a-service) TBW
-   - [Access from the internet](./sections/networking.md#access-from-the-internet) TBW
+ - [Setup](./sections/setup.md)
+   - [Operating system](./sections/setup.md#operating-system)
+   - [Installing Docker](./sections/setup.md#installing-docker)
+   - [The Swarm cluster](./sections/setup.md#the-swarm-cluster)
  - [Central services](./sections/services.md) TBW
    - [Databases](./sections/services.md#databases) TBW
    - [Object Store](./sections/services.md#object-store) TBW
