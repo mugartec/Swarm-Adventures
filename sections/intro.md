@@ -1,6 +1,6 @@
 # Introduction
 
-When you think about creating a self-hosted cluster of computers you wonder what are the best tools available. We engineers/developers know that there is no silver bullet, but in current times almost everyone working with technology will agree that human time is far more expensive than computer time. I follow the principle of searching for the tools that simplify life as much as possible while satisfying the project's needs, and moving on to more complex setups when further needs or cost constraints are met.
+When you think about creating a self-hosted cluster of computers, you wonder what are the best tools to use. We engineers/developers know that there is no silver bullet, but in current times almost everyone working with technology will agree that human time is far more expensive than computer time. I follow the principle of searching for the tools that simplify life as much as possible while satisfying the project's needs, and moving on to more complex setups when further needs or cost constraints are met.
 
 Docker is one of those tools that simplify your life. In a big way.
 

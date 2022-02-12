@@ -1,11 +1,10 @@
 # Setup
 
-One thing that I love about Docker is the minimal requirements it has to run both in terms of software and hardware. You can even run docker on Raspberry Pi's and the like with a minimal performance hit.
+Before starting I configured my router to give the static IPs specified in the [Infrastructure](./intro.md#cluster-infrastructure) to each machine. Here is the configuration of my [DD-WRT](https://dd-wrt.com/) router under Services -> Static Leases (the NAS was added at the end).
 
+![Static Leases](../images/static_leases.png)
 
-Before starting I configured my router to give the static IPs specified in the [Infrastructure](./intro.md#cluster-infrastructure) to each machine (@TODO: add image).
-
-Then added some configuration to my laptop's `~/.ssh/config` for ease of management:
+Then I added some configuration to my laptop's `~/.ssh/config` for ease of management:
 
 ```bash
 Host m1  # stands for Master 1
@@ -23,23 +22,23 @@ Host w1  # stands for Worker 1
 
 I know there are tools like [Ansible](https://www.ansible.com/) to further automate this part, but they seem like overkill to my cluster's size.
 
-## OS and software
+## Operating System
 
-Let's start with the OS. All managers and workers of these adventures will be used exclusively to run Docker, so a minimal OS in which Docker runs without problems would be the reasonable choice.
+One thing that I love about Docker is the minimal requirements it has to run both in terms of software and hardware. You can even run docker on Raspberry Pi's and the like with a minimal performance hit.
 
-### The Operating System
+So let's start with the OS. All managers and workers of these adventures will be used exclusively to run Docker, so a minimal and usable OS in which Docker runs without problems would be the reasonable choice.
 
 There are many OS's out there that are designed *exclusively* (cough) to run containerized applications. But in reality they are all rather opinionated and honestly do much more than that. For example, the now discontinued [Container Linux](https://en.wikipedia.org/wiki/Container_Linux) included software packages to manage a potential cluster and coordinate services. In my opinion these tasks should be handled either by Docker Swarm or by services running inside the Swarm itself, not by the OS. There are many other *container oriented* (cough) OS's like [CoreOS](https://cloud.redhat.com/learn/coreos/), [Mesosphere DCOS](https://d2iq.com/products/dcos) or [RancherOS](https://rancher.com/products/rancher/), but they are also rather opinionated and include tools related to things like Kubernetes or Mesos, apart from always suggesting you to manage your cluster with their preferred software. If you don't believe me just look at the size of [Fedora's CoreOS](https://getfedora.org/coreos?stream=stable), which is the basis for some of these projects and is described as a *minimal operating system for running containerized workloads securely and at scale*. The downloaded ISO weights more than 700MB, so much for "minimal".
 
 So what's my OS of choice? The great [**❤️Alpine Linux❤️**](https://www.alpinelinux.org/). It is **really** a minimal OS that comes with just enough tools to be functional and fun. Moreover, the [docker package](https://pkgs.alpinelinux.org/package/edge/community/x86_64/docker) is included in the official community repositories. Once installed on your machine, the **entire OS** uses no more than 150MB. It's not as lightweight as [Tiny Core Linux](http://www.tinycorelinux.net/) but it allows us adventurous spirits to do everything we need in a simple way.
 
-> A side comment on Alpine Linux: Since it is so lightweight and useful at the same time, it is many times the OS of choice to build Docker images. People start from a light Alpine Linux and then install some packages. For example if you want to connect to a MariaDB database you can just run `apk add mariadb-client`. Because of this, there is A LOT of software that is regularly updated to the Alpine official repositories. I only expect this trend to continue.
+> A side comment on Alpine Linux: Since it is so lightweight and useful at the same time, it is many times the OS of choice to build Docker images. People start from Alpine Linux and then install some packages. For example if you want to connect to a MariaDB database you can just run `apk add mariadb-client`. Because of this, there is A LOT of software that is regularly updated to the Alpine official repositories. I only expect this trend to continue.
 
-Installation and configuration was also a breeze. Just to make the point: After everything was connected I had my cluster up and running in under an hour and a half. This includes installing the OS and software in the 7 machines and then making them join the cluster. And it was my first time installing Alpine Linux.
+Installation and configuration was also a breeze. Just to make the point: After everything was connected I had my cluster up and running in under an hour and a half. This includes installing the OS and software, and making the 7 machines form the desired Swarm cluster. This it was my first time installing Alpine Linux directly to a physical computer.
 
 Enough words then, let's go with OS installation. First download the latest *STANDARD* version of Alpine Linux [here](https://www.alpinelinux.org/downloads/) and burn it to a bootable USB drive with something like [Balena Etcher](https://www.balena.io/etcher/).
 
-Now you have to boot each machine into the USB, wait for the OS to be ready and install Alpine by running `setup-alpine`. This command will offer you many options that can sometimes be confusing. For completeness of the adventures' journal, here I document everything I did on the first machine (Master 1):
+Now you have to boot each machine into the USB, wait for the OS to be ready and install Alpine from the command line. For completeness I document everything I did on the Master 1 machine, excluding some of the output for briefty:
 
 ```
 localhost login: root
@@ -54,7 +53,6 @@ You can setup the system with the command: setup-alpine
 You may change this message by editing /etc/motd.
 ```
 So I run the `setup-alpine command`. It first asked for the language
-
 ```
 localhost:~# setup-alpine
 Available keyboard layouts:
@@ -66,7 +64,9 @@ at     by     dk     fr     ie     jp     lk     ml     pl     sk     ua
 az     ca     dz     gb     il     ke     lt     mt     pt     sy     us
 ba     ch     ee     ge     in     kg     lv     ng     ro     th     uz
 Select keyboard layout [none]: us
-Available variants: us-alt-intl us-altgr-intl us-chr ...
+```
+and the language variant
+```
 Select variant []: us-alt-intl
 ```
 then the hostname for the machine
@@ -106,7 +106,7 @@ HTTP/FTP proxy URL? (e.g. 'http://proxy:8080', or 'none') [none]
 ```
 At this point the machine will look for available mirrors to download additional packages. Here is where I got an error originally for not setting the DNS server(s). You have to choose one of the mirrors to install the software from:
 ```
-Enter mirror number (1-75) or URL to add (or r/f/c/done) [f] 1
+Enter mirror number (1-75) or URL to add (or r/f/c/done) [f]
 ```
 Install an SSH server
 ```
@@ -116,7 +116,7 @@ Select Network Time Protocol client
 ```
 Which NTP client to run? ('busybox', 'openntpd', 'chrony' or 'none') ['chrony']
 ```
-Then we are presented with a list of available hard drives and have to select one
+Then we are presented with a list of available hard drives to install the OS to
 ```
 Which disk(s) would you like to use? (or '?' for help or 'none') [none] sda
 ```
@@ -132,21 +132,30 @@ Now alpine will be installed to your disk. It is important to configure the BIOS
 
 Ok, that looks like a lot. But trust me, after a few machines were ready, selecting all the options and the actual installation did not take more than 3 minutes per machine.
 
-### Software
+## Installing Docker
 
-Now that each machine is provisioned with a great OS and an SSH server, let's first install Docker.
+Now that each machine is provisioned with a great OS and an SSH server, let's install Docker.
 
 So for each Machine we do the following:
  1. SSH into the machine and edit `/etc/apk/repositories` to uncomment the line corresponding to the community repos. Afterwards it should look something like
 ```
-@TODO /etc/apk/repositories contents
+#/media/sda/apks
+http://dl-cdn.alpinelinux.org/alpine/v3.15/main
+http://dl-cdn.alpinelinux.org/alpine/v3.15/community
+#http://dl-cdn.alpinelinux.org/alpine/edge/main
+#http://dl-cdn.alpinelinux.org/alpine/edge/community
+#http://dl-cdn.alpinelinux.org/alpine/edge/testing
 ```
- 2. Run `apk update` and `apk upgrade` (update and upgrade OS packages).
+ 2. Run `apk update` and `apk upgrade` (update package list and upgrade installed packages).
  3. Run `apk add docker` (install docker).
  4. Run `service docker start` (start docker daemon).
- 5. Run `rc-update add docker boot` (always start docker daemon at boot).
+ 5. Run `rc-update add docker boot` (make the docker daemon start at boot).
 
-We should now have docker up and running in each machine. Let's then create the sarm. SSH into master 1 (`ssh m1`) and run `docker swarm init --advertise-addr 192.168.2.4`:
+And that's it. Every time the machine boots, the Docker daemon will be up and running in no time.
+
+## The swarm cluster
+
+Now that we have docker up and running in each machine, let's create the sarm. SSH into Master 1 and initialize a swarm advertising its IP address:
 ```bash
 $ docker swarm init --advertise-addr 192.168.2.4
 
@@ -160,7 +169,7 @@ To add a worker to this swarm, run the following command:
 
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 ```
-Following the instructions, copy the `docker swarm join` command and run it in each worker machine:
+Following the instructions, copy the `docker swarm join` command and run it in each **worker** machine:
 ```
 $ docker swarm join \
   --token XXXXXX-X-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXX \
@@ -168,7 +177,7 @@ $ docker swarm join \
 
 This node joined a swarm as a worker.
 ```
-All workers up and running. Back at the master node:
+All workers are part of the swarm now. Back at the master node:
 ```
 $ docker swarm join-token manager
 
@@ -187,9 +196,14 @@ $ docker swarm join \
 That's it. Literally. We can now SSH into any machine and
 ```bash
 $ docker node ls
-@TODO output of docker node ls 
+ID                  HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+nnnnnnnnnnnnnnn *   master1    Ready     Active         Leader           20.10.11
+nnnnnnnnnnnnnnn     master2    Ready     Active         Reachable        20.10.11
+nnnnnnnnnnnnnnn     master3    Ready     Active         Reachable        20.10.11
+nnnnnnnnnnnnnnn     worker1    Ready     Active                          20.10.11
+nnnnnnnnnnnnnnn     worker2    Ready     Active                          20.10.11
+nnnnnnnnnnnnnnn     worker3    Ready     Active                          20.10.11
+nnnnnnnnnnnnnnn     worker4    Ready     Active                          20.10.11
 ```
 
-## Testing the setup
-
-## Cluster management as a service
+The Swarm is readdy. Let's now see how we'll access our self-hosted applications from the internet and manage the cluster.
