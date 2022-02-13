@@ -25,11 +25,11 @@ English is not my first language, PRs fixing typos or grammar errors are **very*
    - [Operating system](./sections/setup.md#operating-system)
    - [Installing Docker](./sections/setup.md#installing-docker)
    - [The Swarm cluster](./sections/setup.md#the-swarm-cluster)
- - [Central services](./sections/services.md) TBW
-   - [Database](./sections/services.md#databases) TBW
+ - [Central services](./sections/services.md)
+   - [Database](./sections/services.md#database)
    - [Object Store](./sections/services.md#object-store) TBW
    - [Reverse Proxy](./sections/setup.md#reverse-proxy) TBW
- - [Self-hosting paradise](./sections/deploy.md) TBW
+ - [Self-hosting paradise](./sections/deploy.md)
    - [Prerequisites](./sections/deploy.md#prerequisites) TBW
    - [Let's run some!](./sections/deploy.md#example) TBW
 
